@@ -1,0 +1,176 @@
+@startuml class-diagram
+title Университетская информационная система
+skinparam classAttributeIconSize 0
+hide circle
+
+abstract class Employee {
+  - socialSecurityNumber : String
+  - name : String
+  - email : String
+  + Employee(socialSecurityNumber : String, name : String, email : String)
+  + getSocialSecurityNumber() : String
+  + getName() : String
+  + setName(name : String) : void
+  + getEmail() : String
+  + setEmail(email : String) : void
+  + {abstract} getRole() : String
+  + toString() : String
+}
+
+class ResearchEmployee {
+  - researchArea : String
+  - institutes : List<Institute>
+  - assignments : List<ProjectAssignment>
+  + ResearchEmployee(socialSecurityNumber : String, name : String, email : String, researchArea : String)
+  + getResearchArea() : String
+  + getRole() : String
+  + attachToInstitute(institute : Institute) : void
+  + joinProject(project : Project, hours : int) : ProjectAssignment
+  + getHoursOn(project : Project) : int
+  + getTotalProjectHours() : int
+  + getInstitutes() : List<Institute>
+  + getAssignments() : List<ProjectAssignment>
+}
+
+class Lecturer {
+  - courses : List<Course>
+  + Lecturer(socialSecurityNumber : String, name : String, email : String, researchArea : String)
+  + getRole() : String
+  + teachCourse(course : Course) : void
+  + getWeeklyTeachingLoad() : int
+  + getCourses() : List<Course>
+}
+
+class AdministrativeEmployee {
+  - position : String
+  + AdministrativeEmployee(socialSecurityNumber : String, name : String, email : String, position : String)
+  + getPosition() : String
+  + getRole() : String
+}
+
+class Dean {
+  - faculty : Faculty
+  + Dean(socialSecurityNumber : String, name : String, email : String)
+  + getRole() : String
+  + getFaculty() : Faculty
+  ~ setFaculty(faculty : Faculty) : void
+}
+
+class University {
+  - name : String
+  - faculties : List<Faculty>
+  - employees : List<Employee>
+  + University(name : String)
+  + getName() : String
+  + addFaculty(faculty : Faculty) : void
+  + hire(employee : Employee) : void
+  + appointDean(faculty : Faculty, dean : Dean) : void
+  + findEmployee(socialSecurityNumber : String) : Employee
+  + findProject(name : String) : Project
+  + getEmployeeCount() : int
+  + getTotalProjectHours() : int
+  + getLecturers() : List<Lecturer>
+  + getFaculties() : List<Faculty>
+  + getEmployees() : List<Employee>
+  + toString() : String
+}
+
+class Faculty {
+  - name : String
+  - dean : Dean
+  - university : University
+  - institutes : List<Institute>
+  + Faculty(name : String)
+  + getName() : String
+  + getDean() : Dean
+  + setDean(dean : Dean) : void
+  + getUniversity() : University
+  ~ setUniversity(university : University) : void
+  + addInstitute(institute : Institute) : void
+  + getInstitutes() : List<Institute>
+  + toString() : String
+}
+
+class Institute {
+  - name : String
+  - address : String
+  - faculty : Faculty
+  - members : List<ResearchEmployee>
+  + Institute(name : String, address : String)
+  + getName() : String
+  + getAddress() : String
+  + setAddress(address : String) : void
+  + getFaculty() : Faculty
+  ~ setFaculty(faculty : Faculty) : void
+  + addMember(employee : ResearchEmployee) : void
+  + getMembers() : List<ResearchEmployee>
+  + toString() : String
+}
+
+class Project {
+  - name : String
+  - startDate : LocalDate
+  - endDate : LocalDate
+  - assignments : List<ProjectAssignment>
+  - state : State
+  + Project(name : String, startDate : LocalDate, endDate : LocalDate)
+  + getName() : String
+  + getStartDate() : LocalDate
+  + getEndDate() : LocalDate
+  + getState() : State
+  + start() : void
+  + finish() : void
+  + addParticipant(employee : ResearchEmployee, hours : int) : ProjectAssignment
+  + getTotalHours() : int
+  + getAssignments() : List<ProjectAssignment>
+  + toString() : String
+}
+
+class ProjectAssignment {
+  - project : Project
+  - employee : ResearchEmployee
+  - hours : int
+  ~ ProjectAssignment(project : Project, employee : ResearchEmployee, hours : int)
+  + getProject() : Project
+  + getEmployee() : ResearchEmployee
+  + getHours() : int
+  + setHours(hours : int) : void
+  + toString() : String
+}
+
+class Course {
+  - id : int
+  - name : String
+  - weeklyDuration : int
+  - lecturer : Lecturer
+  + Course(id : int, name : String, weeklyDuration : int)
+  + getId() : int
+  + getName() : String
+  + getWeeklyDuration() : int
+  + getLecturer() : Lecturer
+  ~ setLecturer(lecturer : Lecturer) : void
+  + toString() : String
+}
+
+enum "Project.State" as State {
+  PLANNED
+  ACTIVE
+  COMPLETED
+}
+
+Employee <|-- ResearchEmployee
+ResearchEmployee <|-- Lecturer
+Employee <|-- AdministrativeEmployee
+Employee <|-- Dean
+
+University "1" *-- "0..*" Faculty : факультеты >
+Faculty "1" *-- "0..*" Institute : кафедры >
+Faculty "1" -- "0..1" Dean : декан >
+University "1" -- "0..*" Employee : сотрудники >
+ResearchEmployee "1..*" -- "1..*" Institute : прикреплён >
+ResearchEmployee "1" -- "0..*" ProjectAssignment : участие >
+Project "1" *-- "0..*" ProjectAssignment : участники >
+Lecturer "0..*" -- "0..*" Course : ведёт >
+Project *-- State : состояние >
+
+@enduml
