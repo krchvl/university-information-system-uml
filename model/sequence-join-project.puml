@@ -1,0 +1,26 @@
+@startuml sequence-join-project
+title UC5 «Вовлечь сотрудника в проект» — диаграмма последовательности
+skinparam sequenceMessageAlign center
+
+actor "Администратор" as admin
+participant ":University" as uni
+participant ":ResearchEmployee" as emp
+participant ":Project" as project
+participant ":ProjectAssignment" as assignment
+
+admin -> uni : findEmployee(socialSecurityNumber)
+activate uni
+uni --> admin : Employee
+deactivate uni
+
+admin -> emp : joinProject(project, hours)
+activate emp
+emp -> project : addParticipant(this, hours)
+activate project
+project -> assignment ** : new ProjectAssignment(project, employee, hours)
+project --> emp : assignment
+deactivate project
+emp --> admin : assignment
+deactivate emp
+
+@enduml

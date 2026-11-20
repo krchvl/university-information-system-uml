@@ -1,0 +1,42 @@
+@startuml use-case-diagram
+title Университетская информационная система — диаграмма прецедентов
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FEFECE
+  BorderColor #A80036
+}
+
+actor "Администратор" as admin
+actor "Декан" as dean
+actor "Научный сотрудник" as researcher
+actor "Преподаватель" as lecturer
+
+rectangle "Университетская информационная система" {
+  usecase "UC1 Просмотреть сведения о сотруднике" as UC1
+  usecase "UC2 Добавить факультет и кафедру" as UC2
+  usecase "UC3 Назначить декана факультета" as UC3
+  usecase "UC4 Закрепить сотрудника за кафедрой" as UC4
+  usecase "UC5 Вовлечь сотрудника в проект" as UC5
+  usecase "UC6 Назначить преподавателя на курс" as UC6
+  usecase "UC7 Просмотреть учебную нагрузку" as UC7
+  usecase "UC8 Сформировать отчёт по кафедре" as UC8
+  usecase "UC9 Просмотреть проекты сотрудника" as UC9
+}
+
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC4
+admin --> UC5
+admin --> UC6
+admin --> UC8
+dean --> UC1
+dean --> UC5
+dean --> UC7
+dean --> UC8
+researcher --> UC9
+lecturer --> UC7
+lecturer --> UC9
+
+@enduml

@@ -1,0 +1,9 @@
+@startuml state-project
+title Жизненный цикл проекта — диаграмма состояний (UC5)
+
+[*] --> Запланирован : new Project(name, startDate, endDate)
+Запланирован --> Активен : start()
+Активен --> Завершён : finish()
+Завершён --> [*]
+
+@enduml
