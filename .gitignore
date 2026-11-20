@@ -1,0 +1,4 @@
+out/
+.tools/
+*.class
+.DS_Store
